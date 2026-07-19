@@ -1,12 +1,28 @@
+# Python
 __pycache__/
 *.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
 .venv/
-.env
+
+# Testing and analysis
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
+htmlcov/
+
+# Environment variables
+.env
+.env.*
+
+# macOS
 .DS_Store
 
+# Research data
 data/raw/*
 data/processed/*
 !data/raw/.gitkeep
