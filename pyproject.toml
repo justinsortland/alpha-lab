@@ -4,7 +4,10 @@ version = "0.1.0"
 description = "A reproducible quantitative research framework for systematic trading experiments."
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "pandas>=3.0.3",
+    "yfinance>=1.5.1",
+]
 
 [build-system]
 requires = ["uv_build>=0.11.29,<0.12.0"]
@@ -13,6 +16,7 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "mypy>=1.17",
+    "pandas-stubs>=3.0.3.260530",
     "pytest>=8.4",
     "ruff>=0.12",
 ]
@@ -32,3 +36,7 @@ select = ["E", "F", "I", "B", "UP"]
 python_version = "3.12"
 strict = true
 packages = ["alpha_lab"]
+
+[[tool.mypy.overrides]]
+module = ["yfinance", "yfinance.*"]
+ignore_missing_imports = true
