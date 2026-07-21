@@ -85,7 +85,7 @@ def test_load_prices_rejects_empty_download(
         fake_download,
     )
 
-    with pytest.raises(ValueError, match="No price data returned"):
+    with pytest.raises(ValueError, match="Price data is empty"):
         load_prices(
             ticker="INVALID",
             start="2020-01-01",

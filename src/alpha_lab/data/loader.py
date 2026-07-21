@@ -3,13 +3,30 @@
 import pandas as pd
 import yfinance as yf
 
+from alpha_lab.data.validation import (
+    validate_no_missing_values,
+    validate_not_empty,
+    validate_required_columns,
+    validate_sorted_dates,
+)
+
+REQUIRED_PRICE_COLUMNS = [
+    "Date",
+    "Open",
+    "High",
+    "Low",
+    "Close",
+    "Adj Close",
+    "Volume",
+]
+
 
 def load_prices(
     ticker: str,
     start: str,
     end: str,
 ) -> pd.DataFrame:
-    """Download daily historical prices for one ticker.
+    """Download and validate daily historical prices for one ticker.
 
     Args:
         ticker: Yahoo Finance ticker symbol, such as "SPY".
@@ -17,12 +34,12 @@ def load_prices(
         end: Exclusive end date in YYYY-MM-DD format.
 
     Returns:
-        A DataFrame containing Date, Open, High, Low, Close, Adj Close,
-        and Volume.
+        A validated DataFrame containing Date, Open, High, Low, Close,
+        Adj Close, and Volume.
 
     Raises:
-        ValueError: If the ticker is empty, no data is returned, or required
-            columns are missing.
+        ValueError: If the ticker is empty or the downloaded data fails
+            validation.
     """
     ticker = ticker.strip().upper()
 
@@ -38,33 +55,12 @@ def load_prices(
         multi_level_index=False,
     )
 
-    if prices.empty:
-        raise ValueError(
-            f"No price data returned for {ticker} between {start} and {end}"
-        )
+    validate_not_empty(prices)
 
     prices = prices.reset_index()
 
-    expected_columns = [
-        "Date",
-        "Open",
-        "High",
-        "Low",
-        "Close",
-        "Adj Close",
-        "Volume",
-    ]
+    validate_required_columns(prices, REQUIRED_PRICE_COLUMNS)
+    validate_no_missing_values(prices)
+    validate_sorted_dates(prices)
 
-    missing_columns = [
-        column
-        for column in expected_columns
-        if column not in prices.columns
-    ]
-
-    if missing_columns:
-        raise ValueError(
-            "Downloaded data is missing required columns: "
-            f"{missing_columns}"
-        )
-
-    return prices[expected_columns]
+    return prices[REQUIRED_PRICE_COLUMNS]

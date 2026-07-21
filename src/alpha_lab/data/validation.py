@@ -30,6 +30,7 @@ def validate_sorted_dates(df: pd.DataFrame) -> None:
                 f"{current} appears after {previous}."
             )
 
+
 def validate_no_missing_values(df: pd.DataFrame) -> None:
     """Raise an error if there are any 'NaN' values."""
     columns_with_missing_values = df.columns[df.isna().any()].tolist()
